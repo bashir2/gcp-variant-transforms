@@ -1,4 +1,4 @@
-# Copyright 2017 Google Inc.  All Rights Reserved.
+# Copyright 2018 Google Inc.  All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,12 @@ REQUIRED_PACKAGES = [
     # google-cloud-pubsub 0.26.0, which relies on google-cloud-core<0.26dev,
     # >=0.25.0. google-cloud-storage also has requirements on google-cloud-core,
     # and version 1.2.0 resolves the dependency conflicts.
-    'google-cloud-storage<=1.2.0'
+    'google-cloud-storage<=1.2.0',
+    'google-cloud-bigtable==0.29.0',
+    'google-cloud-core==0.28.1'
+    #'google-cloud-happybase==0.26',
+    # The above did not work, even after adding the next (could not find google.cloud.future module)
+    #'google-cloud-core>=0.25'
 ]
 
 INTEGRATION_TEST_REQUIREMENTS = [

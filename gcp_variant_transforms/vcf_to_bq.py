@@ -62,6 +62,7 @@ from gcp_variant_transforms.transforms import merge_headers
 from gcp_variant_transforms.transforms import merge_variants
 from gcp_variant_transforms.transforms import partition_variants
 from gcp_variant_transforms.transforms import variant_to_bigquery
+from gcp_variant_transforms.transforms import variant_to_bigtable
 
 _COMMAND_LINE_OPTIONS = [
     variant_transform_options.VcfReadOptions,
@@ -262,18 +263,21 @@ def run(argv=None):
     table_suffix = ''
     if partitioner and partitioner.get_partition_name(i):
       table_suffix = '_' + partitioner.get_partition_name(i)
-    table_name = known_args.output_table + table_suffix
-    _ = (variants[i] | 'VariantToBigQuery' + table_suffix >>
-         variant_to_bigquery.VariantToBigQuery(
-             table_name,
-             header_fields,
-             variant_merger,
-             processed_variant_factory,
-             append=known_args.append,
-             update_schema_on_append=known_args.update_schema_on_append,
-             allow_incompatible_records=known_args.allow_incompatible_records,
-             omit_empty_sample_calls=known_args.omit_empty_sample_calls,
-             num_bigquery_write_shards=known_args.num_bigquery_write_shards))
+      # TODO fix table_name before submit.
+    _ = (variants[i] | 'VariantToBigTable' + table_suffix >>
+         variant_to_bigtable.VariantToBigTable(''))
+    #table_name = known_args.output_table + table_suffix
+    #_ = (variants[i] | 'VariantToBigQuery' + table_suffix >>
+    #     variant_to_bigquery.VariantToBigQuery(
+    #         table_name,
+    #         header_fields,
+    #         variant_merger,
+    #         processed_variant_factory,
+    #         append=known_args.append,
+    #         update_schema_on_append=known_args.update_schema_on_append,
+    #         allow_incompatible_records=known_args.allow_incompatible_records,
+    #         omit_empty_sample_calls=known_args.omit_empty_sample_calls,
+    #         num_bigquery_write_shards=known_args.num_bigquery_write_shards))
 
   result = pipeline.run()
   result.wait_until_finish()
